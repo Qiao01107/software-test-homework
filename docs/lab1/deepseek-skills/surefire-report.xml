@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.example.lab1.DeepSeekSkillCalculatorTest" time="0.047" tests="9" errors="0" skipped="0" failures="1">
+  <properties>
+    <property name="java.specification.version" value="21"/>
+    <property name="sun.cpu.isalist" value="amd64"/>
+    <property name="sun.jnu.encoding" value="GBK"/>
+    <property name="java.vm.vendor" value="Oracle Corporation"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="java.vendor.url" value="https://java.oracle.com/"/>
+    <property name="user.timezone" value="Asia/Shanghai"/>
+    <property name="os.name" value="Windows 11"/>
+    <property name="java.vm.specification.version" value="21"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="user.country" value="CN"/>
+    <property name="sun.boot.library.path" value="D:\CodeTools\Java\jdk-21.0.11\bin"/>
+    <property name="jdk.debug" value="release"/>
+    <property name="test" value="DeepSeekSkillCalculatorTest"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="user.home" value="C:\Users\Qiao"/>
+    <property name="user.language" value="zh"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.version.date" value="2026-04-21"/>
+    <property name="java.home" value="D:\CodeTools\Java\jdk-21.0.11"/>
+    <property name="file.separator" value="\"/>
+    <property name="basedir" value="D:\School\大三\上\软测\code\software-testing"/>
+    <property name="java.vm.compressedOopsMode" value="Zero based"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="user.script" value=""/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="java.runtime.version" value="21.0.11+9-LTS-211"/>
+    <property name="user.name" value="Qiao"/>
+    <property name="stdout.encoding" value="GBK"/>
+    <property name="path.separator" value=";"/>
+    <property name="os.version" value="10.0"/>
+    <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="java.vm.name" value="Java HotSpot(TM) 64-Bit Server VM"/>
+    <property name="localRepository" value="D:\CodeTools\Apache\apache-maven-3.9.16\repository"/>
+    <property name="java.vendor.url.bug" value="https://bugreport.java.com/bugreport/"/>
+    <property name="java.io.tmpdir" value="C:\Users\Qiao\AppData\Local\Temp\"/>
+    <property name="java.version" value="21.0.11"/>
+    <property name="user.dir" value="D:\School\大三\上\软测\code\software-testing"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="sun.os.patch.level" value=""/>
+    <property name="native.encoding" value="GBK"/>
+    <property name="java.library.path" value="D:\CodeTools\Java\jdk-21.0.11\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;D:\CodeTools\anaconda3\condabin;D:\CodeTools\Oracle19c\WINDOWS.X64_193000_db_home\bin;C:\Program Files\Common Files\Oracle\Java\javapath;D:\CodeProgram\VMware\VMwareWorkstation\bin\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Windows\system32;C:\Program Files\NVIDIA Corporation\NVIDIA App\NvDLISR;C:\Program Files\dotnet\;D:\CodeTools\nodejs\;D:\Program\Bandizip\;D:\CodeTools\anaconda3;D:\CodeTools\anaconda3\Scripts;D:\CodeTools\anaconda3\Library\bin;D:\CodeProgram\mingw64\bin;D:\CodeTools\Git\cmd;D:\CodeTools\nodejs\node_global\;C:\Program Files\Docker\Docker\resources\bin;D:\CodeProgram\runtime\win64;D:\CodeProgram\bin;D:\CodeTools\MySQL\MySQL\MySQL Server 8.0\bin;D:\CodeTools\Java\jdk-21.0.11\bin;D:\CodeTools\Apache\apache-maven-3.9.16\bin;C:\Program Files\GitHub CLI\;D:\CodeProgram\sonar-scanner-8.1.0.6389-windows-x64\bin;D:\CodeTools\pyenv-win\bin;D:\CodeTools\pyenv-win\shims;C:\Users\Public\TongYuan\julia-1.10.10\bin;D:\CodeProgram\MWORKS Syslab\Syslab 2026a\Bin\bin;d:\CodeProgram\Trae CN\bin;d:\CodeProgram\cursor\resources\app\codeBin;D:\CodeProgram\Python\Scripts\;D:\CodeProgram\Python\;C:\Users\Qiao\AppData\Local\Microsoft\WindowsApps;D:\CodeProgram\Microsoft VS Code\bin;D:\CodeTools\nodejs\node_global;D:\CodeProgram\cursor\resources\app\bin;D:\CodeProgram\PostgreSQL\bin;D:\CodeProgram\PyCharm 2024.3.6\bin;D:\CodeTools\texlive\2026\bin\windows;C:\Users\Qiao\AppData\Local\Microsoft\WinGet\Packages\JernejSimoncic.Wget_Microsoft.Winget.Source_8wekyb3d8bbwe;;."/>
+    <property name="java.vm.info" value="mixed mode, sharing"/>
+    <property name="stderr.encoding" value="GBK"/>
+    <property name="java.vendor" value="Oracle Corporation"/>
+    <property name="java.vm.version" value="21.0.11+9-LTS-211"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="java.class.version" value="65.0"/>
+  </properties>
+  <testcase name="firstNegativeSecondPositiveReturnsZero" classname="com.example.lab1.DeepSeekSkillCalculatorTest" time="0.017"/>
+  <testcase name="firstPositiveSecondNegativeReturnsZero" classname="com.example.lab1.DeepSeekSkillCalculatorTest" time="0.001"/>
+  <testcase name="firstPositiveSecondZeroReturnsZero" classname="com.example.lab1.DeepSeekSkillCalculatorTest" time="0.002"/>
+  <testcase name="firstZeroSecondPositiveReturnsZero" classname="com.example.lab1.DeepSeekSkillCalculatorTest" time="0.004">
+    <failure message="expected: &lt;0&gt; but was: &lt;5&gt;" type="org.opentest4j.AssertionFailedError"><![CDATA[org.opentest4j.AssertionFailedError: expected: <0> but was: <5>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at org.junit.jupiter.api.AssertEquals.failNotEqual(AssertEquals.java:197)
+	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:150)
+	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:145)
+	at org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:531)
+	at com.example.lab1.DeepSeekSkillCalculatorTest.firstZeroSecondPositiveReturnsZero(DeepSeekSkillCalculatorTest.java:50)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+]]></failure>
+  </testcase>
+  <testcase name="bothNegativeReturnsZero" classname="com.example.lab1.DeepSeekSkillCalculatorTest" time="0.002"/>
+  <testcase name="twoLargePositiveReturnsSum" classname="com.example.lab1.DeepSeekSkillCalculatorTest" time="0.001"/>
+  <testcase name="twoPositiveReturnsSum" classname="com.example.lab1.DeepSeekSkillCalculatorTest" time="0.001"/>
+  <testcase name="bothZeroReturnsZero" classname="com.example.lab1.DeepSeekSkillCalculatorTest" time="0.0"/>
+  <testcase name="twoMinimalPositiveReturnsSum" classname="com.example.lab1.DeepSeekSkillCalculatorTest" time="0.001"/>
+</testsuite>
