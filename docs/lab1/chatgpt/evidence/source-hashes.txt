@@ -1,0 +1,3 @@
+88bb0d629d6be2159136d17e65802f512a0a4e40da32154907b77aecac4af0b2  src/main/java/study/myconnect/cn/Calculator.java
+e49c6b740f23e5fddc4035445a672391e05365afa3bb31f30fb0530d1ed8f062  src/test/java/study/myconnect/cn/ChatGPTCalculatorTest.java
+7a3d55f965cccaa4023486dc16409bfc00c86bb2395a9bdd78996ba45e32fab0  verification/CalculatorIndependentCheck.java
