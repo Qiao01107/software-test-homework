@@ -1,0 +1,49 @@
+{
+  "limit=-1": {
+    "status": 200,
+    "count": 12
+  },
+  "limit=0": {
+    "status": 200,
+    "count": 0
+  },
+  "skip=-1": {
+    "status": 200,
+    "count": 10
+  },
+  "skip=-2": {
+    "status": 200,
+    "count": 10
+  },
+  "limit=100000": {
+    "status": 200,
+    "count": 12
+  },
+  "blank_title": {
+    "status": 200,
+    "body": {
+      "title": "",
+      "description": null,
+      "status": "pending",
+      "id": 13
+    }
+  },
+  "whitespace_title": {
+    "status": 200,
+    "body": {
+      "title": "  ",
+      "description": null,
+      "status": "pending",
+      "id": 14
+    }
+  },
+  "unexpected_status": {
+    "status": 200,
+    "body": {
+      "title": "x",
+      "description": null,
+      "status": "some-made-up-status",
+      "id": 15
+    }
+  }
+}

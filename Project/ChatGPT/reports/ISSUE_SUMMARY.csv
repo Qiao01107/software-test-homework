@@ -1,0 +1,5 @@
+ID,classification,severity,status,interfaces,failed_test_count,description
+D-001,confirmed software defect,High P1,confirmed in current environment,"PUT /todos/{id}; GET /todos/{id}; GET /todos/",3,"Nullable title update commits NULL, then response validation fails with HTTP 500 and persisted record blocks read routes"
+S-001,pending clarification,Low/Medium,requires business specification,GET /todos/,0,"Negative and unconstrained pagination parameters accepted"
+S-002,requirements ambiguous,Undetermined,requires business specification,POST /todos/,0,"Blank/whitespace titles and arbitrary status values accepted"
+DOC-001,documentation discrepancy,Low,confirmed,README.md,0,"README project structure paths do not match nested actual source directories"

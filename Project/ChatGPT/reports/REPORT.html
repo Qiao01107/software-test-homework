@@ -1,0 +1,280 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>FastAPI Todo 独立软件测试实验报告</title><style>body{font-family:system-ui,-apple-system,"Noto Sans CJK SC","Microsoft YaHei",sans-serif;max-width:1050px;margin:3rem auto;padding:0 1.5rem;color:#1e293b;line-height:1.7;background:#fafbfd}h1,h2,h3{color:#0b395d;line-height:1.4}h1{border-bottom:3px solid #1575a9;padding-bottom:.5rem}h2{border-bottom:1px solid #dbe4ea;padding-bottom:.25rem;margin-top:2rem}table{border-collapse:collapse;width:100%;font-size:.93rem;background:white}td,th{border:1px solid #dae2e8;padding:.6rem;vertical-align:top}th{background:#eef5fa;text-align:left}pre{background:#eef2f6;border-radius:9px;padding:1rem;overflow:auto}code{font-size:.92em}blockquote{border-left:4px solid #aaa;padding-left:1rem}li{margin:.25rem 0}a{color:#0676b2}</style></head><body><h1>FastAPI-CRUD-Todo 独立软件测试实验报告</h1>
+<p><strong>测试对象</strong>：用户本次上传的 <code>FastAPI-CRUD-Todo.zip</code>；本实验只依据压缩包内的源码及自带 README 分析。<br />
+<strong>执行日期</strong>：2026-10-08<br />
+<strong>测试类型</strong>：黑盒 HTTP/API 集成测试 + 灰盒源码/Schema 检查 + SQLite 持久化验证 + 等价类/边界值 + 输入鲁棒性回归测试。<br />
+<strong>测试结论</strong>：79 个 pytest 实例中 76 通过、3 失败、0 error、0 skipped。3 个失败关联 <strong>同一确认缺陷 D-001</strong>；并非三个独立漏洞。限定统计的源文件语句覆盖率 83/83 (100%)，分支覆盖率 8/8 (100%)。<strong>该覆盖率不代表无缺陷</strong>。<br />
+<strong>重大环境限制</strong>：当前安装环境不能使用源码 <code>requirements.txt</code> 指定的原始版本；本次是在较新兼容组件上执行，需在原锁定版本环境再次确认兼容性。详情见第 2 节和 <code>CHANGELOG.md</code>。</p>
+<h2>1. 被测系统分析（独立审查）</h2>
+<h3>1.1 结构和技术栈</h3>
+<p>项目没有传统前端；提供由 Uvicorn 托管的 FastAPI REST 服务和 Swagger <code>/docs</code>。应用技术栈：Python、FastAPI、Pydantic、SQLAlchemy ORM、SQLite。源码依赖写明：FastAPI 0.95.2、Pydantic 1.10.12、Uvicorn 0.22.0、SQLAlchemy 2.0.21。测试工具：pytest、FastAPI TestClient (基于 httpx)、pytest-cov、coverage.py。实验执行环境的实际版本见 <code>environment_versions.json</code>。</p>
+<pre><code class="language-text">FastAPI-CRUD-Todo/
+├── main.py                应用初始化、建表、挂载路由、根接口
+├── database/database.py   sqlite:///./todo.db、engine、SessionLocal、get_db
+├── models/models.py       TodoItem ORM 数据库结构
+├── schemas/schemas.py     TodoCreate / TodoUpdate / TodoOut
+├── routers/todo.py        所有 Todo CRUD 控制器
+├── requirements.txt       业务依赖声明
+├── README.md              项目文档
+└── todo.db                压缩包自带原始 SQLite 数据库（未被测试连接）
+</code></pre>
+<p>数据库表 <code>todos(id INTEGER PRIMARY KEY, title TEXT, description TEXT, status TEXT)</code>。<code>id</code> 作为主键；<code>title</code>、<code>description</code>、<code>status</code> 都未设置 <code>nullable=False</code> 或校验约束。<code>Base.metadata.create_all(bind=engine)</code> 在导入 <code>main.py</code> 时建表，连接 URL 为 <strong>相对当前工作目录</strong> 的 <code>./todo.db</code>；这是保证数据库隔离需要特别关注的细节。</p>
+<h3>1.2 接口路由</h3>
+<table>
+<thead>
+<tr>
+  <th>路由</th>
+  <th>HTTP</th>
+  <th>作用</th>
+  <th>源码正常成功状态</th>
+  <th>关键检查</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>/</code></td>
+  <td>GET</td>
+  <td>欢迎文本</td>
+  <td>200</td>
+  <td>返回 JSON</td>
+</tr>
+<tr>
+  <td><code>/todos/</code></td>
+  <td>POST</td>
+  <td>新建 Todo</td>
+  <td>200</td>
+  <td>请求 Schema；<code>add/commit/refresh</code>；ID、默认值</td>
+</tr>
+<tr>
+  <td><code>/todos/</code></td>
+  <td>GET</td>
+  <td>列表</td>
+  <td>200</td>
+  <td><code>skip=0</code>、<code>limit=10</code>；offset/limit</td>
+</tr>
+<tr>
+  <td><code>/todos/{todo_id}</code></td>
+  <td>GET</td>
+  <td>单项读取</td>
+  <td>200</td>
+  <td><code>id:int</code>；不存在 404</td>
+</tr>
+<tr>
+  <td><code>/todos/{todo_id}</code></td>
+  <td>PUT</td>
+  <td>部分字段更新</td>
+  <td>200</td>
+  <td><code>exclude_unset=True</code>；不存在 404</td>
+</tr>
+<tr>
+  <td><code>/todos/{todo_id}</code></td>
+  <td>DELETE</td>
+  <td>删除</td>
+  <td>200</td>
+  <td>提交数据库；不存在 404</td>
+</tr>
+<tr>
+  <td><code>/docs</code>, <code>/openapi.json</code></td>
+  <td>GET</td>
+  <td>API 文档和 Schema</td>
+  <td>200</td>
+  <td>路由可发现性</td>
+</tr>
+</tbody>
+</table>
+<h3>1.3 Schema 及重要业务规则</h3>
+<ul>
+<li><code>TodoCreate</code>：<code>title: str</code> 必填；<code>description: Optional[str] = None</code>；<code>status: Optional[str] = &quot;pending&quot;</code>。没有字段长度、空串或状态枚举限制。</li>
+<li><code>TodoUpdate</code>：全部字段 <code>Optional[str] = None</code>，PUT 更新时使用 <code>todo.dict(exclude_unset=True)</code>，即区分“缺少键”和“显式传入 null”。</li>
+<li><code>TodoOut</code>：继承 <code>TodoCreate</code> 并添加 <code>id: int</code>，因此输出 <strong>title 必须是字符串</strong>。</li>
+<li><strong>核心不变量风险</strong>：<code>TodoUpdate.title</code> 允许显式传入 null，ORM 的 <code>title</code> 列允许存 null，但 <code>TodoOut.title</code> 不允许 null；更新后会触发响应校验失败。</li>
+<li>未实现认证、审计、状态流转和业务规则校验；这些不能在无产品需求依据时直接认定为功能缺陷。</li>
+</ul>
+<h2>2. 测试环境、隔离与可追溯性</h2>
+<ul>
+<li><strong>原件隔离</strong>：上传 ZIP 解压至 <code>original/FastAPI-CRUD-Todo/</code>。从该文件夹复制<strong>未修改的五个 Python 业务源码</strong>到 <code>working/app/</code>。只在 <code>working/app/</code> 运行服务代码，避免业务代码使用相对路径连接原始 <code>todo.db</code>。</li>
+<li><strong>数据库隔离</strong>：测试 fixture 每个用例用 <code>tmp_path/isolated_test.sqlite3</code> 创建全新 SQLite 文件；用 FastAPI <code>dependency_overrides[get_db]</code> 临时替换数据库依赖，并在每个用例结束后清理 override、释放 SQLAlchemy engine。此 override 只存在于测试进程，没有更改任何业务源码。</li>
+<li><strong>原始数据库保护证据</strong>：原件 <code>todo.db</code> SHA-256 是 <code>3d8e828e06a427d6c73c15c609bcf6245c176441809bd751174996e53c713828</code>，与直接从上传 ZIP 流读取的该文件哈希完全一致。<code>cmp</code> 验证测试用的全部五个源码文件与解压原件一致。</li>
+<li><strong>原始 ZIP 校验</strong>：SHA-256 <code>e8736c90e8e44445aa459dd4ac63edb201e4468857f3290b38e5c7566747a0cd</code>；可与 <code>source_manifest.json</code> 核验。</li>
+<li><strong>依赖限制</strong>：当前 Python 3.13.5；项目声明 FastAPI 0.95.2/Pydantic 1.10.12/SQLAlchemy 2.0.21/Uvicorn 0.22.0。尝试在 venv 安装兼容原版本组合失败，原因是安装源 DNS 无法解析（见 <code>logs/install_dependencies.log</code>），不是应用的安装逻辑故障。随后改用系统已有 FastAPI 0.128.2、Pydantic 2.13.5、SQLAlchemy 2.0.50、httpx 0.28.1，pytest 9.0.2；未修改业务代码。这属于<strong>测试环境与原始依赖不一致的限制</strong>，不应隐瞒。</li>
+<li><strong>环境告警</strong>：Pydantic v2 对 <code>orm_mode</code> 及 <code>.dict()</code> 提出兼容性弃用告警；这些属于环境版本相关提示，未计为已确认业务缺陷。本次 89 条 warning 大多由这些提示的重复发生造成。</li>
+</ul>
+<h2>3. 测试设计和实际覆盖面</h2>
+<p>针对 REST API 和数据库持久化，编写 <code>tests/test_api.py</code> 与 <code>tests/test_database.py</code>，共收集 <strong>79 个独立 pytest 参数化实例</strong>。主要测试维度：</p>
+<ol>
+<li>根路径、Swagger 与 OpenAPI 可用性/路由声明。</li>
+<li>创建、读取、列表、更新、删除的正常链路及其数据库持久化证据。</li>
+<li>title 必填、缺少 JSON、非对象 JSON、数值/列表/字典/布尔等输入类型校验。</li>
+<li>404/422/405，重复删除、不存在 ID、零/负 ID、非法 ID。</li>
+<li>分页默认值、skip、limit、零 limit、超大 skip 和非整数参数。</li>
+<li>更新部分字段、空字典、显式 null 的可选字段；已知问题的三个回归探针。</li>
+<li>中文、表情、引号、类 SQL 注入文本、HTML 标签、换行、空格、长标题的<strong>存取一致性</strong>（并非完整安全审计）。</li>
+<li>SQLite 表结构、主键、数据库 session 关闭行为、原始记录未污染。</li>
+</ol>
+<p>为了不以主观假设制造“失败”，<strong>空标题是否允许、状态是否必须属于枚举、分页负数是否必须被拒绝</strong>只做了非断言式表征，结果另存 <code>unspecified_behavior.json</code>，其业务规则有待产品确认。</p>
+<h2>4. 执行结果与覆盖率</h2>
+<table>
+<thead>
+<tr>
+  <th>指标</th>
+  <th style="text-align:right">首次测试</th>
+  <th style="text-align:right">最终测试</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>pytest collected</td>
+  <td style="text-align:right">79</td>
+  <td style="text-align:right">79</td>
+</tr>
+<tr>
+  <td>实际执行</td>
+  <td style="text-align:right">79</td>
+  <td style="text-align:right">79</td>
+</tr>
+<tr>
+  <td>passed</td>
+  <td style="text-align:right">76</td>
+  <td style="text-align:right">76</td>
+</tr>
+<tr>
+  <td>failed</td>
+  <td style="text-align:right">3</td>
+  <td style="text-align:right">3</td>
+</tr>
+<tr>
+  <td>error</td>
+  <td style="text-align:right">0</td>
+  <td style="text-align:right">0</td>
+</tr>
+<tr>
+  <td>skipped</td>
+  <td style="text-align:right">0</td>
+  <td style="text-align:right">0</td>
+</tr>
+<tr>
+  <td>pytest exit code</td>
+  <td style="text-align:right">1</td>
+  <td style="text-align:right">1（确认回归测试保持失败）</td>
+</tr>
+<tr>
+  <td>coverage</td>
+  <td style="text-align:right">首次未采集</td>
+  <td style="text-align:right">83/83 statement；8/8 branch</td>
+</tr>
+<tr>
+  <td>覆盖率</td>
+  <td style="text-align:right">—</td>
+  <td style="text-align:right">statement 100.00%；branch 100.00%；coverage 综合 100%</td>
+</tr>
+</tbody>
+</table>
+<p>初次 <code>pytest --collect-only</code> 与初次真实运行已分别保存 <code>logs/pytest_collect_initial.log</code>、<code>logs/pytest_initial.log</code> 和 <code>reports/junit_initial.xml</code>。最终运行见 <code>logs/pytest_final.log</code>、<code>reports/junit_final.xml</code>、<code>reports/coverage.xml</code> 和可浏览的 <code>reports/htmlcov/index.html</code>。</p>
+<p>覆盖范围只包括 <code>main.py</code>、<code>database/database.py</code>、<code>models/models.py</code>、<code>routers/todo.py</code>、<code>schemas/schemas.py</code>。项目逻辑较短；100% 覆盖率不代表完整的异常、权限、并发、性能、负载或端到端浏览器覆盖。</p>
+<h2>5. 缺陷报告</h2>
+<h3>D-001（确认的软件缺陷 / 高严重度 P1）</h3>
+<p><strong>标题</strong>：PUT 允许把 Todo 标题持久化为 NULL，随后更新响应、单条查询和列表查询均出现 HTTP 500。<br />
+<strong>涉及接口</strong>：<code>PUT /todos/{todo_id}</code>、<code>GET /todos/{todo_id}</code>、<code>GET /todos/</code>。<br />
+<strong>前提</strong>：独立干净 SQLite 数据库。</p>
+<p><strong>复现步骤</strong>：</p>
+<ol>
+<li><code>POST /todos/</code>，JSON <code>{&quot;title&quot;:&quot;original&quot;, &quot;description&quot;:&quot;keep&quot;}</code>，成功返回 <code>200</code> 和 <code>id=1</code>（测试数据库）。</li>
+<li><code>GET /todos/1</code>，正常返回 200。</li>
+<li><code>PUT /todos/1</code>，JSON <code>{&quot;title&quot;:null}</code>。</li>
+<li>再次调用 <code>GET /todos/1</code> 和 <code>GET /todos/</code>。</li>
+<li>用原生 sqlite3 查询表中该行，确认真实持久化值。</li>
+</ol>
+<p><strong>实际结果</strong>：步骤 3 <code>500 Internal Server Error</code>，步骤 4 两种 GET 同样为 500；数据库查询显示 <code>(1, NULL, 'keep', 'pending')</code>。启用测试客户端异常传播后，三个接口均抛出 <code>fastapi.exceptions.ResponseValidationError</code>，报告 <code>title</code> 响应字段不是字符串。完整异常和 HTTP 请求响应取证见 <code>targeted_reproduction.json</code>。</p>
+<p><strong>预期结果及依据</strong>：<code>TodoUpdate.title: Optional[str]</code> 将 null 作为允许输入，因此合法 Schema 输入不应导致 500。设计可允许 null 且调整响应/业务模型，或拒绝 null 并返回 4xx、保持旧值，或实现其他明确的业务规则；不强制指定修复方案。至少必须保证请求不会造成不受控的 5xx、破坏后续查询可用性。既有 Schema 同时声明 <code>TodoOut.title: str</code>，提供了响应契约依据。</p>
+<p><strong>根因（基于源码和复现）</strong>：<code>routers/todo.py</code> 行 36–39 直接以 <code>exclude_unset=True</code> 将显式 null 写入 <code>TodoItem.title</code> 并 <code>commit()</code>，而 <code>models/models.py</code> 行 8 的列允许 NULL；<code>schemas/schemas.py</code> 中 <code>TodoOut</code> 继承了非空的 <code>TodoCreate.title: str</code>。因此写入成功后响应校验报错，后续查询读取到该条坏记录也报错。<strong>先提交数据库、后生成响应</strong>，所以客户端见到 500 并不意味着事务自动回滚。</p>
+<p><strong>缺陷分类</strong>：输入约束不一致 / 数据完整性 / 服务端未处理错误 / CRUD 持久化缺陷。<br />
+<strong>严重程度</strong>：高（P1）：单次合法 Schema 输入可使列表 API 持续不可用，持久化异常数据直到纠正。<br />
+<strong>可复现性</strong>：已在临时 SQLite 中独立复现，3 个自动化回归测试稳定失败。受前述组件版本偏差限制，需要在原锁定环境复核确认其跨版本表现。<br />
+<strong>关联失败测试</strong>：<code>test_validated_null_title_update_must_not_500</code>、<code>test_null_title_update_must_not_break_subsequent_get</code>、<code>test_null_title_update_must_not_break_list</code>。</p>
+<h3>S-001（待确认 / 需求规格不明确）：分页负数和上限</h3>
+<p><strong>接口</strong>：<code>GET /todos/?limit=-1</code> / <code>?skip=-1</code> / <code>?limit=100000</code>。<br />
+<strong>输入与结果</strong>：在 12 条数据下，<code>limit=-1</code> 返回 200 和 12 条；<code>skip=-1</code> 返回 200 和默认 limit 的 10 条；<code>limit=100000</code> 返回 200 和 12 条。见 <code>unspecified_behavior.json</code>。<br />
+<strong>期望结果及依据</strong>：常见 API 规范会约束 <code>skip &gt;= 0</code>、<code>1 &lt;= limit &lt;= max_limit</code>，但当前源码及 README 未明确业务要求。<br />
+<strong>分类</strong>：待确认设计风险，而非正式失败；如果列表可能大规模增长，负数 <code>limit</code> 或无上界 <code>limit</code> 存在资源消耗风险。<br />
+<strong>严重程度</strong>：低至中，取决于接口规模/可访问性。<strong>未列为确认缺陷</strong>。</p>
+<h3>S-002（需求/规格不明确）：标题内容与状态值</h3>
+<p><strong>接口</strong>：<code>POST /todos/</code>。<br />
+<strong>输入</strong>：<code>{&quot;title&quot;:&quot;&quot;}</code>、<code>{&quot;title&quot;:&quot;  &quot;}</code>、<code>{&quot;title&quot;:&quot;x&quot;,&quot;status&quot;:&quot;some-made-up-status&quot;}</code>。<br />
+<strong>结果</strong>：均返回 200 并原样保存。<br />
+<strong>期望结果及依据</strong>：如果产品要求非空白标题或有限状态枚举，应加入明确约束；源码和 README 没有这类规范，不能据此判定错误。<br />
+<strong>分类</strong>：需求/规格不明确。<strong>不计为失败</strong>。</p>
+<h3>DOC-001（确认文档偏差 / 低严重度）</h3>
+<p>README 的 “Project Structure” 将 <code>database.py</code>、<code>models.py</code>、<code>schemas.py</code> 画在项目根目录，但实际源码位于 <code>database/</code>、<code>models/</code>、<code>schemas/</code> 子目录。属于文档准确性问题，<strong>不是这次三个失败用例的原因</strong>。</p>
+<h3>环境与脚本问题的分类结果</h3>
+<table>
+<thead>
+<tr>
+  <th>类别</th>
+  <th>结果与证据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>确认的软件缺陷</td>
+  <td>D-001，一项根因、三处接口表现</td>
+</tr>
+<tr>
+  <td>待确认问题</td>
+  <td>S-001，分页参数缺少非负/上界约束的风险</td>
+</tr>
+<tr>
+  <td>需求/规格不明确</td>
+  <td>S-002，空标题与状态自由取值；S-001 也涉及规格缺失</td>
+</tr>
+<tr>
+  <td>测试脚本问题</td>
+  <td>初次测试收集与执行未发现需要修正的测试脚本错误，<strong>修正次数为 0</strong></td>
+</tr>
+<tr>
+  <td>测试环境问题</td>
+  <td>隔离 venv 安装原版依赖失败；改用已安装的新版依赖，并记录偏差、完整错误日志</td>
+</tr>
+<tr>
+  <td>文档质量偏差</td>
+  <td>DOC-001，README 目录说明与实际不一致</td>
+</tr>
+</tbody>
+</table>
+<h2>6. 修正审计与文件完整性</h2>
+<p>在记录的首次 pytest 运行之后，<strong>没有修改、跳过、删除或 xfail 任何失败测试</strong>。最终运行仅增加 coverage/JUnit 输出，并额外执行隔离复现与非断言式规格表征脚本。尝试安装依赖失败后选择现有环境是<strong>环境适配</strong>；由于未安装原版本，该限制写入报告。完整事件记录见 <code>reports/CHANGELOG.md</code>、<code>logs/install_dependencies.log</code>。</p>
+<p>测试源码只位于 <code>tests/</code>，诊断脚本位于 <code>tools/</code>。应用源码 <code>working/app</code> 与原始 ZIP 相同；无产品修复和业务重构。</p>
+<h2>7. 局限、结论和后续建议</h2>
+<ul>
+<li><strong>结论</strong>：正常 CRUD、分页及若干边界输入整体工作；D-001 是会污染数据库并导致读接口持续 500 的高影响错误。不能用 76/79 通过或 100% 覆盖率掩盖它。</li>
+<li><strong>验证缺口</strong>：因离线下载失败，未能在原项目锁定的 Python/依赖组合执行一次对照测试；也未做并发压力、安全授权审计、真实服务器网络部署或生产数据迁移测试。因此结果是当前实际环境中的有证据缺陷，不应表述为“所有环境均已验证”。</li>
+<li><strong>下一步（仅建议，未修改源码）</strong>：先明确 null 标题的业务预期，针对 <code>TodoUpdate</code>/ORM/输出一致性修复并新增回归；同时明确分页范围、状态词汇和标题空白规则，再在与原 <code>requirements.txt</code> 完全一致的环境重跑相同测试。</li>
+</ul>
+<h2>8. 交付材料和重现命令</h2>
+<pre><code class="language-text">independent_audit/
+├── REPORT.md, CHANGELOG.md, metrics.json, source_manifest.json
+├── environment_versions.json, pip_freeze_full.txt
+├── working/app/               应用源码副本（不含原始 todo.db）
+├── tests/conftest.py          每用例的独立 SQLite 和依赖覆盖
+├── tests/test_api.py          HTTP CRUD / 校验 / 边界 / 缺陷探针
+├── tests/test_database.py     数据库与会话生命周期检查
+├── tools/reproduce_and_characterize.py
+├── tools/characterize_unspecified_inputs.py
+├── pytest.ini, run_tests.sh
+├── logs/                      收集、首次、最终、安装失败、诊断日志
+└── reports/                   JUnit XML、coverage XML/HTML、目标取证
+</code></pre>
+<p><strong>Linux / macOS，先安装依赖后从交付根目录执行：</strong></p>
+<pre><code class="language-bash">python -m venv .venv
+source .venv/bin/activate
+pip install -r working/app/requirements.txt 'httpx==0.24.1' pytest pytest-cov
+bash run_tests.sh
+</code></pre>
+<p><strong>Windows PowerShell（推荐 Python 3.10）：</strong></p>
+<pre><code class="language-powershell">py -3.10 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r .\working\app\requirements.txt 'httpx==0.24.1' pytest pytest-cov
+cd .\working\app
+$env:PYTHONPATH = (Get-Location).Path
+python -m pytest ..\..\tests -c ..\..\pytest.ini --cov=main --cov=database --cov=models --cov=routers --cov=schemas --cov-branch --cov-report=term-missing
+</code></pre>
+<p>预期当前未修复应用仍有三个针对 D-001 的失败用例，故 pytest <strong>exit code=1 属于预期的缺陷检测结果</strong>，不应通过篡改业务源码或删除失败用例使其变为 0。报告中 100% 代码覆盖率是本次 Python 3.13 的实际执行记录；在 Python 3.10/pinned 版本上需重新测量，不能保证完全相同。</p>
+</body></html>

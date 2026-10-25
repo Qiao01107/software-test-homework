@@ -1,0 +1,71 @@
+{
+  "source": "Only uploaded ZIP unmodified Python sources in working/app",
+  "sqlite": "unique temporary test file, deleted after capture",
+  "input": {
+    "initial_post": {
+      "title": "original",
+      "description": "keep"
+    },
+    "update": {
+      "title": null
+    }
+  },
+  "post": {
+    "status": 200,
+    "json": {
+      "title": "original",
+      "description": "keep",
+      "status": "pending",
+      "id": 1
+    }
+  },
+  "before_get": {
+    "status": 200,
+    "json": {
+      "title": "original",
+      "description": "keep",
+      "status": "pending",
+      "id": 1
+    }
+  },
+  "put_null_title": {
+    "status": 500,
+    "body": "Internal Server Error"
+  },
+  "after_get": {
+    "status": 500,
+    "body": "Internal Server Error"
+  },
+  "after_list": {
+    "status": 500,
+    "body": "Internal Server Error"
+  },
+  "sqlite_rows_after_failed_update": [
+    [
+      1,
+      null,
+      "keep",
+      "pending"
+    ]
+  ],
+  "raised_exceptions": {
+    "update": {
+      "raised": true,
+      "exception_type": "ResponseValidationError",
+      "exception_message": "1 validation error:\n  {'type': 'string_type', 'loc': ('response', 'title'), 'msg': 'Input should be a valid string', 'input': None}\n\n  File \"/mnt/data/fastapi_todo_independent_audit/working/app/routers/todo.py\", line 31, in update_todo\n    PUT /todos/{todo_id}",
+      "traceback_excerpt": "thon3.13/site-packages/starlette/middleware/errors.py\", line 186, in __call__\n    raise exc\n  File \"/opt/pyvenv/lib/python3.13/site-packages/starlette/middleware/errors.py\", line 164, in __call__\n    await self.app(scope, receive, _send)\n  File \"/opt/pyvenv/lib/python3.13/site-packages/starlette/middleware/exceptions.py\", line 63, in __call__\n    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)\n  File \"/opt/pyvenv/lib/python3.13/site-packages/starlette/_exception_handler.py\", line 53, in wrapped_app\n    raise exc\n  File \"/opt/pyvenv/lib/python3.13/site-packages/starlette/_exception_handler.py\", line 42, in wrapped_app\n    await app(scope, receive, sender)\n  File \"/opt/pyvenv/lib/python3.13/site-packages/fastapi/middleware/asyncexitstack.py\", line 18, in __call__\n    await self.app(scope, receive, send)\n  File \"/opt/pyvenv/lib/python3.13/site-packages/starlette/routing.py\", line 716, in __call__\n    await self.middleware_stack(scope, receive, send)\n  File \"/opt/pyvenv/lib/python3.13/site-packages/starlette/routing.py\", line 736, in app\n    await route.handle(scope, receive, send)\n  File \"/opt/pyvenv/lib/python3.13/site-packages/starlette/routing.py\", line 290, in handle\n    await self.app(scope, receive, send)\n  File \"/opt/pyvenv/lib/python3.13/site-packages/fastapi/routing.py\", line 115, in app\n    await wrap_app_handling_exceptions(app, request)(scope, receive, send)\n  File \"/opt/pyvenv/lib/python3.13/site-packages/starlette/_exception_handler.py\", line 53, in wrapped_app\n    raise exc\n  File \"/opt/pyvenv/lib/python3.13/site-packages/starlette/_exception_handler.py\", line 42, in wrapped_app\n    await app(scope, receive, sender)\n  File \"/opt/pyvenv/lib/python3.13/site-packages/fastapi/routing.py\", line 101, in app\n    response = await f(request)\n               ^^^^^^^^^^^^^^^^\n  File \"/opt/pyvenv/lib/python3.13/site-packages/fastapi/routing.py\", line 377, in app\n    content = await serialize_response(\n              ^^^^^^^^^^^^^^^^^^^^^^^^^\n    ...<10 lines>...\n    )\n    ^\n  File \"/opt/pyvenv/lib/python3.13/site-packages/fastapi/routing.py\", line 215, in serialize_response\n    raise ResponseValidationError(\n    ...<3 lines>...\n    )\nfastapi.exceptions.ResponseValidationError: 1 validation error:\n  {'type': 'string_type', 'loc': ('response', 'title'), 'msg': 'Input should be a valid string', 'input': None}\n\n  File \"/mnt/data/fastapi_todo_independent_audit/working/app/routers/todo.py\", line 31, in update_todo\n    PUT /todos/{todo_id}\n"
+    },
+    "get": {
+      "raised": true,
+      "exception_type": "ResponseValidationError",
+      "exception_message": "1 validation error:\n  {'type': 'string_type', 'loc': ('response', 'title'), 'msg': 'Input should be a valid string', 'input': None}\n\n  File \"/mnt/data/fastapi_todo_independent_audit/working/app/routers/todo.py\", line 24, in read_todo\n    GET /todos/{todo_id}",
+      "traceback_excerpt": "python3.13/site-packages/starlette/middleware/errors.py\", line 186, in __call__\n    raise exc\n  File \"/opt/pyvenv/lib/python3.13/site-packages/starlette/middleware/errors.py\", line 164, in __call__\n    await self.app(scope, receive, _send)\n  File \"/opt/pyvenv/lib/python3.13/site-packages/starlette/middleware/exceptions.py\", line 63, in __call__\n    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)\n  File \"/opt/pyvenv/lib/python3.13/site-packages/starlette/_exception_handler.py\", line 53, in wrapped_app\n    raise exc\n  File \"/opt/pyvenv/lib/python3.13/site-packages/starlette/_exception_handler.py\", line 42, in wrapped_app\n    await app(scope, receive, sender)\n  File \"/opt/pyvenv/lib/python3.13/site-packages/fastapi/middleware/asyncexitstack.py\", line 18, in __call__\n    await self.app(scope, receive, send)\n  File \"/opt/pyvenv/lib/python3.13/site-packages/starlette/routing.py\", line 716, in __call__\n    await self.middleware_stack(scope, receive, send)\n  File \"/opt/pyvenv/lib/python3.13/site-packages/starlette/routing.py\", line 736, in app\n    await route.handle(scope, receive, send)\n  File \"/opt/pyvenv/lib/python3.13/site-packages/starlette/routing.py\", line 290, in handle\n    await self.app(scope, receive, send)\n  File \"/opt/pyvenv/lib/python3.13/site-packages/fastapi/routing.py\", line 115, in app\n    await wrap_app_handling_exceptions(app, request)(scope, receive, send)\n  File \"/opt/pyvenv/lib/python3.13/site-packages/starlette/_exception_handler.py\", line 53, in wrapped_app\n    raise exc\n  File \"/opt/pyvenv/lib/python3.13/site-packages/starlette/_exception_handler.py\", line 42, in wrapped_app\n    await app(scope, receive, sender)\n  File \"/opt/pyvenv/lib/python3.13/site-packages/fastapi/routing.py\", line 101, in app\n    response = await f(request)\n               ^^^^^^^^^^^^^^^^\n  File \"/opt/pyvenv/lib/python3.13/site-packages/fastapi/routing.py\", line 377, in app\n    content = await serialize_response(\n              ^^^^^^^^^^^^^^^^^^^^^^^^^\n    ...<10 lines>...\n    )\n    ^\n  File \"/opt/pyvenv/lib/python3.13/site-packages/fastapi/routing.py\", line 215, in serialize_response\n    raise ResponseValidationError(\n    ...<3 lines>...\n    )\nfastapi.exceptions.ResponseValidationError: 1 validation error:\n  {'type': 'string_type', 'loc': ('response', 'title'), 'msg': 'Input should be a valid string', 'input': None}\n\n  File \"/mnt/data/fastapi_todo_independent_audit/working/app/routers/todo.py\", line 24, in read_todo\n    GET /todos/{todo_id}\n"
+    },
+    "list": {
+      "raised": true,
+      "exception_type": "ResponseValidationError",
+      "exception_message": "1 validation error:\n  {'type': 'string_type', 'loc': ('response', 0, 'title'), 'msg': 'Input should be a valid string', 'input': None}\n\n  File \"/mnt/data/fastapi_todo_independent_audit/working/app/routers/todo.py\", line 20, in read_todos\n    GET /todos/",
+      "traceback_excerpt": "/lib/python3.13/site-packages/starlette/middleware/errors.py\", line 186, in __call__\n    raise exc\n  File \"/opt/pyvenv/lib/python3.13/site-packages/starlette/middleware/errors.py\", line 164, in __call__\n    await self.app(scope, receive, _send)\n  File \"/opt/pyvenv/lib/python3.13/site-packages/starlette/middleware/exceptions.py\", line 63, in __call__\n    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)\n  File \"/opt/pyvenv/lib/python3.13/site-packages/starlette/_exception_handler.py\", line 53, in wrapped_app\n    raise exc\n  File \"/opt/pyvenv/lib/python3.13/site-packages/starlette/_exception_handler.py\", line 42, in wrapped_app\n    await app(scope, receive, sender)\n  File \"/opt/pyvenv/lib/python3.13/site-packages/fastapi/middleware/asyncexitstack.py\", line 18, in __call__\n    await self.app(scope, receive, send)\n  File \"/opt/pyvenv/lib/python3.13/site-packages/starlette/routing.py\", line 716, in __call__\n    await self.middleware_stack(scope, receive, send)\n  File \"/opt/pyvenv/lib/python3.13/site-packages/starlette/routing.py\", line 736, in app\n    await route.handle(scope, receive, send)\n  File \"/opt/pyvenv/lib/python3.13/site-packages/starlette/routing.py\", line 290, in handle\n    await self.app(scope, receive, send)\n  File \"/opt/pyvenv/lib/python3.13/site-packages/fastapi/routing.py\", line 115, in app\n    await wrap_app_handling_exceptions(app, request)(scope, receive, send)\n  File \"/opt/pyvenv/lib/python3.13/site-packages/starlette/_exception_handler.py\", line 53, in wrapped_app\n    raise exc\n  File \"/opt/pyvenv/lib/python3.13/site-packages/starlette/_exception_handler.py\", line 42, in wrapped_app\n    await app(scope, receive, sender)\n  File \"/opt/pyvenv/lib/python3.13/site-packages/fastapi/routing.py\", line 101, in app\n    response = await f(request)\n               ^^^^^^^^^^^^^^^^\n  File \"/opt/pyvenv/lib/python3.13/site-packages/fastapi/routing.py\", line 377, in app\n    content = await serialize_response(\n              ^^^^^^^^^^^^^^^^^^^^^^^^^\n    ...<10 lines>...\n    )\n    ^\n  File \"/opt/pyvenv/lib/python3.13/site-packages/fastapi/routing.py\", line 215, in serialize_response\n    raise ResponseValidationError(\n    ...<3 lines>...\n    )\nfastapi.exceptions.ResponseValidationError: 1 validation error:\n  {'type': 'string_type', 'loc': ('response', 0, 'title'), 'msg': 'Input should be a valid string', 'input': None}\n\n  File \"/mnt/data/fastapi_todo_independent_audit/working/app/routers/todo.py\", line 20, in read_todos\n    GET /todos/\n"
+    }
+  }
+}

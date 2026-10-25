@@ -1,0 +1,31 @@
+{
+  "initial": {
+    "tests": 79,
+    "failures": 3,
+    "errors": 0,
+    "skipped": 0
+  },
+  "final": {
+    "tests": 79,
+    "failures": 3,
+    "errors": 0,
+    "skipped": 0
+  },
+  "final_passed": 76,
+  "first_passed": 76,
+  "cov_lines": {
+    "covered": 83,
+    "total": 83,
+    "fraction": 1.0
+  },
+  "cov_branches": {
+    "covered": 8,
+    "total": 8,
+    "fraction": 1.0
+  },
+  "confirmed_defect_root_causes": 1,
+  "failing_regression_tests": 3,
+  "business_source_changed": false,
+  "test_script_corrections_after_first_run": 0,
+  "pinned_project_dependencies_recreated": false
+}

@@ -1,0 +1,31 @@
+{
+  "source_zip_sha256": "e8736c90e8e44445aa459dd4ac63edb201e4468857f3290b38e5c7566747a0cd",
+  "source_files": {
+    "main.py": {
+      "original_sha256": "2258e12500836b154061aa0333c643b22cfa14b407cf7f94a7dbfdd12452ba7a",
+      "test_copy_sha256": "2258e12500836b154061aa0333c643b22cfa14b407cf7f94a7dbfdd12452ba7a",
+      "byte_equal": true
+    },
+    "database/database.py": {
+      "original_sha256": "8ae641fc2c1fb9f7ab046f19275afcecdc727c873cd8c22f18fca990f9d63487",
+      "test_copy_sha256": "8ae641fc2c1fb9f7ab046f19275afcecdc727c873cd8c22f18fca990f9d63487",
+      "byte_equal": true
+    },
+    "models/models.py": {
+      "original_sha256": "036129e497e94850d767a2350180f987565e546dcae924fc0ef798d7e62914f6",
+      "test_copy_sha256": "036129e497e94850d767a2350180f987565e546dcae924fc0ef798d7e62914f6",
+      "byte_equal": true
+    },
+    "routers/todo.py": {
+      "original_sha256": "ea8e7e8cc44261edb816d31a1c28250a6fadabb97282f31b4ad51612758cb9ed",
+      "test_copy_sha256": "ea8e7e8cc44261edb816d31a1c28250a6fadabb97282f31b4ad51612758cb9ed",
+      "byte_equal": true
+    },
+    "schemas/schemas.py": {
+      "original_sha256": "0ca28aa636993daa48405a60ca1b60858c6be4a3768c5a285abf3f7524d65ecc",
+      "test_copy_sha256": "0ca28aa636993daa48405a60ca1b60858c6be4a3768c5a285abf3f7524d65ecc",
+      "byte_equal": true
+    }
+  },
+  "original_sqlite_sha256": "3d8e828e06a427d6c73c15c609bcf6245c176441809bd751174996e53c713828"
+}
