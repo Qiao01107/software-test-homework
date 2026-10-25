@@ -1,0 +1,55 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.5, pytest-9.1.1, pluggy-1.6.0
+rootdir: D:\School\����\��\����\С��\Project\FastAPI-CRUD-Todo -codex\ai_test_experiment
+configfile: pytest.ini
+plugins: anyio-4.15.1, cov-7.1.0
+collected 21 items
+
+ai_test_experiment\tests\test_api.py .................F...               [100%]
+
+================================== FAILURES ===================================
+______ test_update_null_title_should_be_rejected_without_internal_error _______
+
+isolated_api = (<starlette.testclient.TestClient object at 0x0000027DFE33C5A0>, sessionmaker(class_='Session', autocommit=False, bind...\Temp\pytest-of-Qiao\pytest-156\test_update_null_title_should_0\test_todo.db), autoflush=False, expire_on_commit=True))
+
+    def test_update_null_title_should_be_rejected_without_internal_error(isolated_api):
+        client, session_local = isolated_api
+        created = create_todo(client, title="title")
+        todo_id = created.json()["id"]
+    
+        response = client.put(f"/todos/{todo_id}", json={"title": None})
+        with session_local() as db:
+            stored_title = db.execute(
+                select(TodoItem.title).where(TodoItem.id == todo_id)
+            ).scalar_one()
+    
+>       assert response.status_code == 422, (
+            f"expected request validation error, got {response.status_code}; "
+            f"body={response.text!r}; stored_title={stored_title!r}"
+        )
+E       AssertionError: expected request validation error, got 500; body='Internal Server Error'; stored_title=None
+E       assert 500 == 422
+E        +  where 500 = <Response [500 Internal Server Error]>.status_code
+
+ai_test_experiment\tests\test_api.py:187: AssertionError
+============================== warnings summary ===============================
+C:\Users\Qiao\AppData\Local\Temp\fastapi_todo_test_venv_20261006\Lib\site-packages\starlette\testclient.py:29
+  C:\Users\Qiao\AppData\Local\Temp\fastapi_todo_test_venv_20261006\Lib\site-packages\starlette\testclient.py:29: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    [], typing.ContextManager[anyio.abc.BlockingPortal]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=============================== tests coverage ================================
+_______________ coverage: platform win32, python 3.13.5-final-0 _______________
+
+Name                   Stmts   Miss Branch BrPart  Cover   Missing
+------------------------------------------------------------------
+database\database.py      11      4      0      0    64%   11-15
+main.py                    9      0      0      0   100%
+models\models.py           8      0      0      0   100%
+routers\todo.py           41      0      8      0   100%
+schemas\schemas.py        14      0      0      0   100%
+------------------------------------------------------------------
+TOTAL                     83      4      8      0    96%
+=========================== short test summary info ===========================
+FAILED ai_test_experiment\tests\test_api.py::test_update_null_title_should_be_rejected_without_internal_error
+=================== 1 failed, 20 passed, 1 warning in 1.01s ===================

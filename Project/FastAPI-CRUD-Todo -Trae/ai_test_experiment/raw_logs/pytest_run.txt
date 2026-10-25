@@ -1,0 +1,74 @@
+﻿============================= test session starts =============================
+platform win32 -- Python 3.10.21, pytest-9.1.1, pluggy-1.6.0 -- D:\CodeTools\conda_envs\todo_test\python.exe
+cachedir: .pytest_cache
+metadata: {'Python': '3.10.21', 'Platform': 'Windows-10-10.0.26200-SP0', 'Packages': {'pytest': '9.1.1', 'pluggy': '1.6.0'}, 'Plugins': {'anyio': '4.15.1', 'cov': '7.1.0', 'html': '4.2.0', 'metadata': '3.1.1'}, 'CI': 'true', 'JAVA_HOME': 'D:\\CodeTools\\Java\\jdk-21.0.11'}
+rootdir: D:\School\大三\上\软测\小组\Project\FastAPI-CRUD-Todo -Trae
+plugins: anyio-4.15.1, cov-7.1.0, html-4.2.0, metadata-3.1.1
+collecting ... collected 38 items
+
+ai_test_experiment/tests/test_crud.py::test_create_todo_full_fields PASSED [  2%]
+ai_test_experiment/tests/test_crud.py::test_create_todo_minimal_fields PASSED [  5%]
+ai_test_experiment/tests/test_crud.py::test_create_then_read_by_id PASSED [  7%]
+ai_test_experiment/tests/test_crud.py::test_id_auto_increments PASSED    [ 10%]
+ai_test_experiment/tests/test_crud.py::test_read_todo_not_found_404 PASSED [ 13%]
+ai_test_experiment/tests/test_crud.py::test_list_todos_returns_all_created PASSED [ 15%]
+ai_test_experiment/tests/test_crud.py::test_update_full PASSED           [ 18%]
+ai_test_experiment/tests/test_crud.py::test_update_partial_only_title PASSED [ 21%]
+ai_test_experiment/tests/test_crud.py::test_update_not_found_404 PASSED  [ 23%]
+ai_test_experiment/tests/test_crud.py::test_delete_todo PASSED           [ 26%]
+ai_test_experiment/tests/test_crud.py::test_delete_then_read_404 PASSED  [ 28%]
+ai_test_experiment/tests/test_crud.py::test_delete_twice_404 PASSED      [ 31%]
+ai_test_experiment/tests/test_crud.py::test_delete_not_found_404 PASSED  [ 34%]
+ai_test_experiment/tests/test_list_pagination.py::test_get_non_int_id_422 PASSED [ 36%]
+ai_test_experiment/tests/test_list_pagination.py::test_get_negative_id_404 PASSED [ 39%]
+ai_test_experiment/tests/test_list_pagination.py::test_get_zero_id_404 PASSED [ 42%]
+ai_test_experiment/tests/test_list_pagination.py::test_list_default_limit PASSED [ 44%]
+ai_test_experiment/tests/test_list_pagination.py::test_list_skip_and_limit PASSED [ 47%]
+ai_test_experiment/tests/test_list_pagination.py::test_list_limit_zero PASSED [ 50%]
+ai_test_experiment/tests/test_list_pagination.py::test_list_skip_beyond_range PASSED [ 52%]
+ai_test_experiment/tests/test_list_pagination.py::test_list_negative_limit_ignores_limit PASSED [ 55%]
+ai_test_experiment/tests/test_list_pagination.py::test_list_negative_skip_treated_as_zero PASSED [ 57%]
+ai_test_experiment/tests/test_list_pagination.py::test_list_non_int_skip_422 PASSED [ 60%]
+ai_test_experiment/tests/test_list_pagination.py::test_list_non_int_limit_422 PASSED [ 63%]
+ai_test_experiment/tests/test_list_pagination.py::test_list_limit_more_than_count PASSED [ 65%]
+ai_test_experiment/tests/test_root.py::test_root PASSED                  [ 68%]
+ai_test_experiment/tests/test_validation.py::test_post_missing_title_422 PASSED [ 71%]
+ai_test_experiment/tests/test_validation.py::test_post_null_title_422 PASSED [ 73%]
+ai_test_experiment/tests/test_validation.py::test_post_empty_body_422 PASSED [ 76%]
+ai_test_experiment/tests/test_validation.py::test_post_title_int_coerced_to_string PASSED [ 78%]
+ai_test_experiment/tests/test_validation.py::test_post_empty_string_title_accepted PASSED [ 81%]
+ai_test_experiment/tests/test_validation.py::test_post_whitespace_title_accepted PASSED [ 84%]
+ai_test_experiment/tests/test_validation.py::test_post_arbitrary_status_accepted PASSED [ 86%]
+ai_test_experiment/tests/test_validation.py::test_post_status_int_coerced PASSED [ 89%]
+ai_test_experiment/tests/test_validation.py::test_post_extra_field_ignored PASSED [ 92%]
+ai_test_experiment/tests/test_validation.py::test_update_empty_body_noop PASSED [ 94%]
+ai_test_experiment/tests/test_validation.py::test_update_title_null_causes_500 PASSED [ 97%]
+ai_test_experiment/tests/test_validation.py::test_update_status_null_ok PASSED [100%]
+
+============================== warnings summary ===============================
+..\..\..\..\..\..\..\CodeTools\conda_envs\todo_test\lib\site-packages\starlette\testclient.py:29
+  D:\CodeTools\conda_envs\todo_test\lib\site-packages\starlette\testclient.py:29: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    [], typing.ContextManager[anyio.abc.BlockingPortal]
+
+ai_test_experiment/tests/test_crud.py: 13 warnings
+ai_test_experiment/tests/test_list_pagination.py: 12 warnings
+ai_test_experiment/tests/test_root.py: 1 warning
+ai_test_experiment/tests/test_validation.py: 12 warnings
+  D:\CodeTools\conda_envs\todo_test\lib\site-packages\httpx\_client.py:690: DeprecationWarning: The 'app' shortcut is now deprecated. Use the explicit style 'transport=WSGITransport(app=...)' instead.
+    warnings.warn(message, DeprecationWarning)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=============================== tests coverage ================================
+______________ coverage: platform win32, python 3.10.21-final-0 _______________
+
+Name                   Stmts   Miss Branch BrPart  Cover   Missing
+------------------------------------------------------------------
+database\database.py      11      4      0      0    64%   11-15
+main.py                    9      0      0      0   100%
+models\models.py           8      0      0      0   100%
+routers\todo.py           41      0      8      0   100%
+schemas\schemas.py        14      0      0      0   100%
+------------------------------------------------------------------
+TOTAL                     83      4      8      0    96%
+Coverage HTML written to dir ai_test_experiment/raw_logs/htmlcov
+======================= 38 passed, 39 warnings in 3.26s =======================
